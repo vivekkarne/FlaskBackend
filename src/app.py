@@ -1,7 +1,7 @@
 import os
 from flask import Flask, request,render_template
 from flask_sqlalchemy import SQLAlchemy
-from models import db, Product
+from models import db, Product, User
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -31,5 +31,13 @@ def login():
         db.session.commit()
         return f"Done!!"
 
+@app.route('/user/<user_name>', methods = ['PUT'])
+def put_user(user_name):
+   if request.method == 'PUT':
+      new_user = User(name=user_name)
+      db.session.add(new_user)
+      db.session.commit()
+      return f"User Added!"
+
 if __name__ == '__main__':
-    app.run()
+   app.run()
