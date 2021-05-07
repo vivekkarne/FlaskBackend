@@ -35,6 +35,13 @@ class Reviews(db.Model):
     user = db.relationship("User", back_populates="products")
     product = db.relationship("Product", back_populates="users")
 
+    # def __init__(self, review, rating):
+    #     self.review = review
+    #     self.rating = rating
+    
+    def __repr__(self):
+        return f"{self.review} : {self.rating}"
+
 
 class Product(db.Model):
     __tablename__ = 'products'
