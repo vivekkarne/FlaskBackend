@@ -35,6 +35,10 @@ class Reviews(db.Model):
     user = db.relationship("User", back_populates="products")
     product = db.relationship("Product", back_populates="users")
 
+    __table_args__ = (
+        db.UniqueConstraint(user_id, product_id),
+    )
+
     # def __init__(self, review, rating):
     #     self.review = review
     #     self.rating = rating
@@ -58,6 +62,9 @@ class Product(db.Model):
     def __repr__(self):
         return f"{self.name}:{self.description}"
 
+    def as_dict(self):
+        return {col.name: getattr(self, col.name) for col in self.__table__.columns}
+
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -71,3 +78,6 @@ class User(db.Model):
 
     def __repr__(self):
         return f"{self.name}"
+
+    def as_dict(self):
+        return {col.name: getattr(self, col.name) for col in self.__table__.columns}

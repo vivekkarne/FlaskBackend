@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request,render_template
+from flask import Flask, request,render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from models import db, Product, User
 
@@ -39,5 +39,23 @@ def put_user(user_name):
       db.session.commit()
       return f"User Added!"
 
+# Actual APIs
+
+@app.route('/product/<product_id>', methods = ['GET'])
+def get_product(product_id):
+   if request.method == 'GET':
+      product = db.session.query(Product).get(product_id)
+      if product is not None:
+         return jsonify(product.as_dict())
+      return jsonify(error="Product Not found")
+
+@app.route('/user/<user_id>', methods = ['GET'])
+def get_user(user_id):
+   if request.method == 'GET':
+      user = db.session.query(User).get(user_id)
+      if user is not None:
+         return jsonify(user.as_dict())
+      return jsonify(error="User Not found")
+      
 if __name__ == '__main__':
    app.run()
