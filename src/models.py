@@ -25,7 +25,7 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
-class Reviews(db.Model):
+class Review(db.Model):
     __tablename__ = 'reviews'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
@@ -53,7 +53,7 @@ class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(), nullable=False)
     description = db.Column(db.String())
-    users = db.relationship("Reviews", back_populates = "product")
+    users = db.relationship("Review", back_populates = "product")
 
     def __init__(self, name, description):
         self.name = name
@@ -71,7 +71,7 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(), nullable=False)
-    products = db.relationship("Reviews", back_populates = "user")    
+    products = db.relationship("Review", back_populates = "user")    
 
     def __init__(self, name):
         self.name = name
