@@ -6,6 +6,8 @@ from models import db, Product, User, Review
 from sqlalchemy.exc import IntegrityError
 from psycopg2.errors import UniqueViolation
 
+import json
+
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -61,8 +63,8 @@ def get_user(user_id):
          return jsonify(user.as_dict())
       return jsonify(error="User Not found")
 
-@app.route('/review/<product_id>', methods = ['POST'])
-def insert_or_update_review(product_id):
+@app.route('/review/<product_id>', methods = ['POST','PUT','GET'])
+def review_operations(product_id):
    if request.method == 'POST':
       product = db.session.query(Product).get(product_id)
 
@@ -71,22 +73,87 @@ def insert_or_update_review(product_id):
          review = request.form['review']
          rating = request.form['rating']
 
-         review_obj = Review(review=review, rating=rating)
-         review_obj.user = db.session.query(User).get(user_id)
+         # review_obj = Review(review=review, rating=rating)
+         user = db.session.query(User).get(user_id)
 
-         if review_obj.user is None:
+         if user is None:
             return jsonify({"status": 400, "message": "Malformed query: User does not exits"})
-         product.users.append(review_obj)
-
-         try:
-            db.session.commit()
-         except IntegrityError as e:
-            assert isinstance(e.orig, UniqueViolation)
+         
+         if any(user.id == review_user.user_id for review_user in product.users):
             return jsonify({"status": 400, "message": "Malformed Query: use PUT /review/product_id to update an existing review"})
+
+         review_obj = Review(review=review, rating=rating)
+         review_obj.user = user
+         product.users.append(review_obj)
+         db.session.commit()
+
+         # try:
+         #    db.session.commit()
+         # except IntegrityError as e:
+         #    assert isinstance(e.orig, UniqueViolation)
+         #    return jsonify({"status": 400, "message": "Malformed Query: use PUT /review/product_id to update an existing review"})
          
          return jsonify({"status": 200, "message": "Review added"})
 
       return jsonify({"status": 400, "message": "Malformed query: Product does not exits"})
-      
+
+   if request.method == 'PUT':
+      product = db.session.query(Product).get(product_id)
+
+      if product is not None:
+         user_id = request.form['userid']
+         review = request.form['review']
+         rating = request.form['rating']
+
+         user = db.session.query(User).get(user_id)
+
+         if user is None:
+            return jsonify({"status": 400, "message": "Malformed query: User does not exits"})
+
+         if any(user.id == review_user.user_id for review_user in product.users):
+            update_assoc = Review.query.filter_by(user_id=user.id, product_id=product_id).first()
+            update_assoc.review = review
+            update_assoc.rating = rating
+            db.session.commit()
+            return jsonify({"status": 200, "message": "Review updated"})
+
+         review_obj = Review(review=review, rating=rating)
+         review_obj.user = user
+         product.users.append(review_obj)
+         db.session.commit()
+
+         # try:
+         #    db.session.commit()
+         # except IntegrityError as e:
+         #    assert isinstance(e.orig, UniqueViolation)
+         #    return jsonify({"status": 400, "message": "Malformed Query: use PUT /review/product_id to update an existing review"})
+         
+         return jsonify({"status": 200, "message": "Review added"})
+
+      return jsonify({"status": 400, "message": "Malformed query: Product does not exits"})
+
+   if request.method == 'GET':
+      product = db.session.query(Product).get(product_id)
+
+      if product is not None:
+         all_reviews = Review.query.filter_by(product_id=product_id).all()
+         for review in all_reviews:
+            print(review.as_dict())
+         return json.dumps([review.as_dict() for review in all_reviews])
+
+      return jsonify({"status": 400, "message": "Malformed query: Product does not exits"})
+   
+   if request.method == 'DELETE':
+      product = db.session.query(Product).get(product_id)
+
+      if product is not None:
+         all_reviews = Review.query.filter_by(product_id=product_id).all()
+         for review in all_reviews:
+            print(review.as_dict())
+         return json.dumps([review.as_dict() for review in all_reviews])
+
+      return jsonify({"status": 400, "message": "Malformed query: Product does not exits"})
+
+
 if __name__ == '__main__':
    app.run()

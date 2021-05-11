@@ -46,6 +46,9 @@ class Review(db.Model):
     def __repr__(self):
         return f"{self.review} : {self.rating}"
 
+    def as_dict(self):
+        return dict(user_id = self.user_id, user_name = self.user.name, product_id = self.product_id, product_name = self.product.name, review= self.review, rating=self.rating)
+
 
 class Product(db.Model):
     __tablename__ = 'products'

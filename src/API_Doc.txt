@@ -1,0 +1,6 @@
+Readme for APIs
+
+POST - add a new review record, cannot update via POST, need to use put for updating a record 
+PUT - to insert new records or update if the record already exists
+
+Reference: https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-index_.html
