@@ -30,5 +30,20 @@ Environment is now set to run flask and postgres
 
 Verify the variables in .env file are set properly for testing:
    DATABASE_URL_TEST = "postgresql://student:student@localhost:5432/products_test"
-   DATABASE_URL = "postgresql://student:student@localhost:5432/products"
+   DATABASE_URL = "postgresql://student:student@localhost:5432/products" -- Doesnt matter but for consistency
+   
+   Check APP_SETTINGS is set to config.TestingConfig
    APP_SETTINGS = "config.TestingConfig"
+
+Use flask-migrate to update tables in your database
+python3 manage.py db upgrade
+
+Seed data into the DB:
+python3 seeder.py seed_db
+
+Start the flask server
+python3 run.py run
+
+Open another terminal navigate to src, and activate virtual env
+Run the tester here using
+python3 tester.py
