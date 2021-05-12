@@ -3,9 +3,6 @@ from flask import Flask, request,render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from models import db, Product, User, Review
 
-from sqlalchemy.exc import IntegrityError
-from psycopg2.errors import UniqueViolation
-
 import json
 
 
