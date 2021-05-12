@@ -43,7 +43,7 @@ python3 seeder.py seed_db
 Start the flask server  
 python3 run.py run  
   
-Now you must be able to access the rest end points at http://localhost:5000/ and use the [API DOCUMENTATION](./apidocs.md) to observe the responses  
+Now you must be able to access the rest end points at http://localhost:5000/ and use the [API Documentation](./apidocs.md) to observe the responses  
   
 Note: Use migrate and upgrade when schema is changed  
 python3 manage.py db migrate  
