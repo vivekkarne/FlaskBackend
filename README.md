@@ -1,5 +1,5 @@
 # Flaschemy
-[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
+[![Build Status]()
 
 A backend system designed using Flask, SQLAlchemy, Postgres, and Docker to provide RESTful services to an E-Commerce website.
 
