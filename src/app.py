@@ -16,9 +16,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 
-@app.route("/")
-def hello_world():
-    return jsonify(hello="world")
 
 @app.route('/product/<product_id>', methods = ['GET'])
 def get_product(product_id):
