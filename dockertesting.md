@@ -1,13 +1,14 @@
+#Flaschemy Docker Tester
+
 Testing in docker:
 
-Stop local postgres server if already running, sudo service postgresql@x.x-main stop
+Stop local flask server if running
+kill -9 pid
 
-Migrate old actual databases before clearing volumes, so that schema is up to date
-"docker-compose exec app python manage.py db migrate",
-if doesnt work do "docker-compose exec app python manage.py db stamp head" and then "docker-compose exec app python manage.py db migrate"
-docker-compose exec app python manage.py db migrate
+Stop local postgresql service if running
+sudo service postgresql@xx stop
 
-Clear volumes and down the containers, loses all data
+Clear volumes and stop the containers(assuming dockersetup.md is running), data is lost from the products db(ie. the main db)
 docker-compose down -v
 
 Change change products to products_test for POSTGRES_DB in docker_compose.yml
@@ -21,10 +22,13 @@ Go to base directory containing docker-compose.yml and run the command to spin u
    docker-compose up -d --build
 
 Create and seed mock db for testing
-   docker-compose exec app python seeder.py create_db -- Create tables
+   docker-compose exec app python manage.py db upgrade -- Create tables
    docker-compose exec app python seeder.py seed_db -- Seed data
 
 Now run the tester.py to see all the outputs
+   docker-compose exec app python tester.py
+
+Post Completion for returning to default config:
 
 Change the params back to point to original products db
    POSTGRES_DB=products -> in docker-compose.yml
@@ -33,13 +37,3 @@ Change the params back to point to original products db
 Remove the volume for mock db
    docker-compose down -v
 
-Go to base directory containing docker-compose.yml and run the command to spin up docker containers with updated configs:
-   docker-compose up -d --build
-
-Apply previously backup migration
-   docker-compose exec app manage.py db upgrade
-
-Apply seed data:
-   docker-compose exec app seeder.py seed_db
-
-Database products is again in prod mode and ready to go
