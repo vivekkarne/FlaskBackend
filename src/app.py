@@ -63,7 +63,7 @@ def get_user(user_id):
          return jsonify(user.as_dict())
       return jsonify(error="User Not found")
 
-@app.route('/review/<product_id>', methods = ['POST','PUT','GET'])
+@app.route('/review/<product_id>', methods = ['POST','PUT','GET','DELETE'])
 def review_operations(product_id):
    if request.method == 'POST':
       product = db.session.query(Product).get(product_id)
@@ -147,10 +147,18 @@ def review_operations(product_id):
       product = db.session.query(Product).get(product_id)
 
       if product is not None:
-         all_reviews = Review.query.filter_by(product_id=product_id).all()
-         for review in all_reviews:
-            print(review.as_dict())
-         return json.dumps([review.as_dict() for review in all_reviews])
+         user_id = request.form['userid']
+         user = db.session.query(User).get(user_id)
+
+         if user is None:
+            return jsonify({"status": 400, "message": "Malformed query: User does not exits"})
+
+         if any(user.id == review_user.user_id for review_user in product.users):
+            Review.query.filter_by(user_id=user.id, product_id=product_id).delete()
+            db.session.commit()
+            return jsonify({"status": 200, "message": "User review removed"})
+         
+         return jsonify({"status": 400, "message": "Malformed query: Review does not exist for the following product_id, user_id pair"})
 
       return jsonify({"status": 400, "message": "Malformed query: Product does not exits"})
 
