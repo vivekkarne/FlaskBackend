@@ -73,7 +73,6 @@ def review_operations(product_id):
          review = request.form['review']
          rating = request.form['rating']
 
-         # review_obj = Review(review=review, rating=rating)
          user = db.session.query(User).get(user_id)
 
          if user is None:
@@ -87,11 +86,6 @@ def review_operations(product_id):
          product.users.append(review_obj)
          db.session.commit()
 
-         # try:
-         #    db.session.commit()
-         # except IntegrityError as e:
-         #    assert isinstance(e.orig, UniqueViolation)
-         #    return jsonify({"status": 400, "message": "Malformed Query: use PUT /review/product_id to update an existing review"})
          
          return jsonify({"status": 200, "message": "Review added"})
 
@@ -122,12 +116,6 @@ def review_operations(product_id):
          product.users.append(review_obj)
          db.session.commit()
 
-         # try:
-         #    db.session.commit()
-         # except IntegrityError as e:
-         #    assert isinstance(e.orig, UniqueViolation)
-         #    return jsonify({"status": 400, "message": "Malformed Query: use PUT /review/product_id to update an existing review"})
-         
          return jsonify({"status": 200, "message": "Review added"})
 
       return jsonify({"status": 400, "message": "Malformed query: Product does not exits"})
