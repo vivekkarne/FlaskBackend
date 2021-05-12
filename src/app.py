@@ -23,7 +23,7 @@ def get_product(product_id):
       product = db.session.query(Product).get(product_id)
       if product is not None:
          return jsonify(product.as_dict())
-      return jsonify(error="Product Not found")
+      return jsonify(message="Product Not found")
 
 @app.route('/user/<user_id>', methods = ['GET'])
 def get_user(user_id):
@@ -31,7 +31,7 @@ def get_user(user_id):
       user = db.session.query(User).get(user_id)
       if user is not None:
          return jsonify(user.as_dict())
-      return jsonify(error="User Not found")
+      return jsonify(message="User Not found")
 
 @app.route('/review/<product_id>', methods = ['POST','PUT','GET','DELETE'])
 def review_operations(product_id):

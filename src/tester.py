@@ -53,7 +53,7 @@ def getProductDetails(product_id):
 
    return response.text
 
-def getUserId(user_id):
+def getUserDetails(user_id):
    url = f"http://localhost:5000/user/{user_id}"
 
    payload={}
@@ -81,8 +81,8 @@ def test_post_review():
    print("------Testing post review method---------")
    # Post a review and it should be accepted if it is the first time that user is reviewing a product
    print("Post review for the first time for a product user pair ", end = ": ")
-   response_json = json.loads(postReview(1,2,''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(40)), round(random.random(), 2)*10 ))
-   if response_json["status"] == 200 and response_json["message"] == "Review added":
+   response_dict = json.loads(postReview(1,2,''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(40)), round(random.random(), 2)*10 ))
+   if response_dict["status"] == 200 and response_dict["message"] == "Review added":
       print("Test Passed")
    else:
       print("Test Failed")
@@ -92,8 +92,8 @@ def test_post_review():
    # Post a review by the same user for the same product twice, should prompt th user to use PUT
    print("Post review should not accept duplicate inserts, prompts to use put for updation ", end = ": ")
    json.loads(postReview(1,2,''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(40)), round(random.random(), 2)*10 ))
-   response_json = json.loads(postReview(1,2,''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(40)), round(random.random(), 2)*10 ))
-   if response_json["status"] == 400 and response_json["message"] == "Malformed Query: use PUT /review/product_id to update an existing review":
+   response_dict = json.loads(postReview(1,2,''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(40)), round(random.random(), 2)*10 ))
+   if response_dict["status"] == 400 and response_dict["message"] == "Malformed Query: use PUT /review/product_id to update an existing review":
       print("Test Passed")
    else:
       print("Test Failed")
@@ -103,8 +103,8 @@ def test_put_review():
    print("------Testing put review method---------")
    # Put a review and it should be accpeted if it is an insert, first time the user is reviewing the product
    print("Put review for the first time for a product user pair ", end = ": ")
-   response_json = json.loads(putReview(3,2,''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(40)), round(random.random(), 2)*10 ))
-   if response_json["status"] == 200 and response_json["message"] == "Review added":
+   response_dict = json.loads(putReview(3,2,''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(40)), round(random.random(), 2)*10 ))
+   if response_dict["status"] == 200 and response_dict["message"] == "Review added":
       print("Test Passed")
    else:
       print("Test Failed")
@@ -114,8 +114,8 @@ def test_put_review():
    # Post a review by the same user for the same product twice, should prompt th user to use PUT
    print("Put duplicate reviews, latest review updates the preceeding review ", end = ": ")
    json.loads(putReview(6,4,''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(40)), round(random.random(), 2)*10 ))
-   response_json = json.loads(putReview(6,4,''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(40)), round(random.random(), 2)*10 ))
-   if response_json["status"] == 200 and response_json["message"] == "Review updated":
+   response_dict = json.loads(putReview(6,4,''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(40)), round(random.random(), 2)*10 ))
+   if response_dict["status"] == 200 and response_dict["message"] == "Review updated":
       print("Test Passed")
    else:
       print("Test Failed")
@@ -126,15 +126,15 @@ def test_delete_review():
    # Delete an existing review 
    print("Delete an existing review for a product by user ", end = ": ")
    json.loads(putReview(7,3,''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(40)), round(random.random(), 2)*10 ))
-   response_json = json.loads(deleteReview(7,3))
-   if response_json["status"] == 200 and response_json["message"] == "User review removed":
+   response_dict = json.loads(deleteReview(7,3))
+   if response_dict["status"] == 200 and response_dict["message"] == "User review removed":
       print("Test Passed")
    else:
       print("Test failed")
    # Delete a non existing review
    print("Delete an non existing review for a product by user ", end = ": ")
-   response_json = json.loads(deleteReview(7,3))
-   if response_json["status"] == 400 and response_json["message"] == "Malformed query: Review does not exist for the following product_id, user_id pair":
+   response_dict = json.loads(deleteReview(7,3))
+   if response_dict["status"] == 400 and response_dict["message"] == "Malformed query: Review does not exist for the following product_id, user_id pair":
       print("Test Passed")
    else:
       print("Test failed")
@@ -166,6 +166,36 @@ def test_get_reviews():
    else:
       print("Test Failed")
 
+def test_get_product_details():
+   print("------Testing get product details method---------")
+   print("Get details for a product which exists ", end=": ")
+   response_dict = json.loads(getUserDetails(2))
+   if(response_dict["id"] == 2):
+      print("Test Passed")
+   else:
+      print("Test Failed")
+   print("Get details for a product which does not exists ", end=": ")
+   response_dict = json.loads(getProductDetails(11))
+   if(response_dict["message"] == "Product Not found"):
+      print("Test Passed")
+   else:
+      print("Test Failed")
+
+def test_get_user_details():
+   print("------Testing get user details method---------")
+   print("Get details for a user who exists ", end=": ")
+   response_dict = json.loads(getUserDetails(5))
+   if(response_dict["id"] == 5):
+      print("Test Passed")
+   else:
+      print("Test Failed")
+   print("Get details for a user who does not exists ", end=": ")
+   response_dict = json.loads(getUserDetails(11))
+   if(response_dict["message"] == "User Not found"):
+      print("Test Passed")
+   else:
+      print("Test Failed")  
+
 
 if __name__ == "__main__":
    print("------------Testing API methods------------")
@@ -177,3 +207,9 @@ if __name__ == "__main__":
    test_delete_review()
    print()
    test_get_reviews()
+   print()
+   test_get_product_details()
+   print()
+   test_get_user_details()
+   print()
+   print("------------Test Complete------------")
