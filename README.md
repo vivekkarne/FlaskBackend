@@ -4,7 +4,7 @@
 A backend system designed using Flask, SQLAlchemy, Postgres, and Docker to provide RESTful services to an E-Commerce website.
 
 ### API Documentation  
-   [List of supported functions!](docs/apidocs.txt)  
+   [List of supported functions!](docs/apidocs.md)  
 
 ### Backend system setup on your local machine
    A vanilla implementation of the backend system running on your local host.  
