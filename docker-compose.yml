@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  app:
+    build: ./src
+    command: python run.py run -h 0.0.0.0
+    volumes:
+      - ./src/:/usr/src/app/
+    ports:
+      - 5000:5000
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:9.5.25
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=products
+    healthcheck:
+      test: /usr/bin/pg_isready
+      interval: 5s
+      timeout: 10s
+      retries: 120
+    ports:
+      - 5432:5432
+
+# To persist the DB as a docker volume
+volumes:
+  postgres_data:
