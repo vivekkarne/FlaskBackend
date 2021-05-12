@@ -15,7 +15,7 @@ DELETE /review/{product_id}
 GET /product/{product_id}  
 &nbsp;&nbsp;&nbsp;&nbsp;Gets all the fields for a given product_id  
   
-GET  /user/{user_id}
+GET  /user/{user_id}  
 &nbsp;&nbsp;&nbsp;&nbsp;Gets all the fields for a given user_id  
   
    
