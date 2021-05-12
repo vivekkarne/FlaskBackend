@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from app import app
-from models import db
+from models import db, Product, User, Review
 
 
 app.config.from_object(os.getenv('APP_SETTINGS'))

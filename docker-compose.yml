@@ -18,7 +18,7 @@ services:
     environment:
       - POSTGRES_USER=docker
       - POSTGRES_PASSWORD=docker
-      - POSTGRES_DB=products
+      - POSTGRES_DB=products_test #change to products_test for testing
     healthcheck:
       test: /usr/bin/pg_isready
       interval: 5s
