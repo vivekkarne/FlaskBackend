@@ -1,12 +1,12 @@
 # Flaschemy Local Runner
 
-Download Postgres:  
+#### Download Postgres:  
 sudo apt-get install postgresql postgresql-contrib  
 sudo service postgres@x.x status  
 sudo service postgres@x.x start, if not running  
 Ref: https://www.postgresqltutorial.com/install-postgresql-linux/  
 
-Setup Database:  
+#### Setup Database:  
 
 Create a db in local system:  
 sudo -u postgres createdb --owner={user} {dbname}  
@@ -17,7 +17,7 @@ login and see if the db is created:
 sudo -u postgres psql  
 psql# \l  
   
-Setup python env:  
+#### Setup python env:  
 Download python, preferably 3.6.13  
 Navigate to src directory, activate venv using source env/bin/activate  
 Or remove env folder and create your own venv using python3 -m venv env, activate env  
@@ -32,7 +32,7 @@ Verify the variables in .env file are set properly
    - DATABASE_URL_TEST = "postgresql://student:student@localhost:5432/products_test" -- Doesnt matter but for consistency  
    
    - Check APP_SETTINGS is set to config.ProductionConfig
-   - APP_SETTINGS = "config.ProductionConfig"  
+   - APP_SETTINGS = "config.ProductionConfig" 
   
 Use flask-migrate to update tables in your database  
 python3 manage.py db upgrade  
